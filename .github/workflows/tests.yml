@@ -1,0 +1,24 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 取出代码
+        uses: actions/checkout@v4
+
+      - name: 看看编译器版本
+        run: |
+          gcc --version | head -n 1
+          make --version | head -n 1
+
+      - name: 编译（警告一律当错误）
+        run: make CFLAGS="-O1 -g -std=c11 -Wall -Wextra -Wpedantic -Werror"
+
+      - name: 跑回归测试
+        run: make test
